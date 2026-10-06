@@ -1,24 +1,17 @@
-import java.time.Duration;
-import java.time.LocalDateTime;
-
-// Explicit java.util imports
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-
-// Explicit AWT imports (do NOT use import java.awt.*)
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-
-// Swing imports
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 
 enum VehicleType {
     BIKE,
@@ -36,8 +29,6 @@ enum TicketStatus {
     ACTIVE,
     CLOSED
 }
-
-
 
 abstract class Vehicle {
 
@@ -99,8 +90,6 @@ class Truck extends Vehicle {
     }
 }
 
-
-
 class VehicleFactory {
     // creates and returns the desired class object
     public static Vehicle createVehicle(VehicleType type, String number) {
@@ -119,7 +108,6 @@ class VehicleFactory {
         }
     }
 }
-
 
 abstract class ParkingSpot {
     private int spotNumber;
@@ -238,17 +226,12 @@ class TruckSpot extends ParkingSpot {
     }
 }
 
-
-
 interface ParkingObserver {
     void update();
 }
 
-
-
 class ParkingFloor {
     private int floorNumber;
-
 
     private List<ParkingSpot> parkingSpots;
 
@@ -323,8 +306,6 @@ class ParkingFloor {
     }
 }
 
-
-
 class ParkingDisplayBoard implements ParkingObserver {
 
     private ParkingFloor floor;
@@ -348,11 +329,9 @@ class ParkingDisplayBoard implements ParkingObserver {
     }
 }
 
-
 interface ParkingStrategy {
     ParkingSpot findSpot(List<ParkingFloor> floors, Vehicle vehicle);
 }
-
 
 class FirstAvailableStrategy implements ParkingStrategy {
     @Override
@@ -369,7 +348,6 @@ class FirstAvailableStrategy implements ParkingStrategy {
         return null;
     }
 }
-
 
 interface PricingStrategy {
     double calculatePrice(Vehicle vehicle, long hours);
@@ -422,8 +400,6 @@ class WeekendPricingStrategy implements PricingStrategy {
     }
 }
 
-
-
 interface PaymentStrategy {
     void pay(double amount);
 }
@@ -448,8 +424,6 @@ class CashPayment implements PaymentStrategy {
         System.out.println("Cash Payment successfull : Rs. " + amount);
     }
 }
-
-
 
 class ParkingTicket {
     private static int counter = 1000;
@@ -574,8 +548,6 @@ class ParkingTicket {
 
 }
 
-
-
 class EntryGate {
     private int gateNumber;
 
@@ -587,7 +559,6 @@ class EntryGate {
         return this.gateNumber;
     }
 
-
     public ParkingTicket generateTicket(Vehicle vehicle, ParkingFloor floor, ParkingSpot spot) {
         System.out.println("Vehicle entering from Gate : " + this.gateNumber);
 
@@ -596,7 +567,6 @@ class EntryGate {
 
 }
 
-
 class ExitGate {
     private int gateNumber;
 
@@ -604,30 +574,15 @@ class ExitGate {
         this.gateNumber = gateNumber;
     }
 
-    public void processExit(
-            ParkingTicket ticket,
-            PricingStrategy pricingStrategy,
-            PaymentStrategy paymentStrategy) {
-
-                ticket.closeTicket();
-
-        long hours = ticket.calculateHours();
-
-        double amount = pricingStrategy.calculatePrice(ticket.getVehicle(), hours);
-
-        System.out.println("Vehicle exiting from gate : " + this.gateNumber);
-
-        System.out.println("Parking Duration : " + hours);
-
-        System.out.println("Parking charges : " + amount);
-
-
-        paymentStrategy.pay(amount);
-    }
-
+    public double processExit(ParkingTicket ticket, PricingStrategy pricingStrategy, PaymentStrategy paymentStrategy) {
+    ticket.closeTicket();
+    long hours = ticket.calculateHours();
+    double amount = pricingStrategy.calculatePrice(ticket.getVehicle(), hours);
+    paymentStrategy.pay(amount);
+    return amount;
 }
 
-
+}
 
 class ParkingLot {
     // instance of class
@@ -641,8 +596,6 @@ class ParkingLot {
 
     // maps the ticket number with active parking slot
     private Map<Integer, ParkingTicket> activeTickets;
-
-
 
     private Map<String, ParkingTicket> vehicleTicketMap;
 
@@ -665,18 +618,14 @@ class ParkingLot {
         pricingStrategy = new NormalPricingStrategy();
     }
 
-
     // Method to return the singleton class object
-    public static synchronized ParkingLot getInstance()
-    {
-        if(instance == null)
-        {
+    public static synchronized ParkingLot getInstance() {
+        if (instance == null) {
             instance = new ParkingLot();
         }
 
         return instance;
     }
-
 
     public void setParkingLotName(String parkingLotName) {
         this.parkingLotName = parkingLotName;
@@ -704,8 +653,6 @@ class ParkingLot {
         this.pricingStrategy = strategy;
     }
 
-    
-
     public ParkingTicket parkVehicle(
             Vehicle vehicle,
             EntryGate entryGate) {
@@ -718,11 +665,9 @@ class ParkingLot {
 
         ParkingSpot spot = parkingStrategy.findSpot(floors, vehicle);
 
-
         if (spot == null) {
             throw new RuntimeException("Parking is FULL");
         }
-
 
         ParkingFloor selectedFloor = null;
 
@@ -735,36 +680,32 @@ class ParkingLot {
             }
         }
         if (selectedFloor == null) {
-                throw new RuntimeException("Enable to identify floor");
-            }
-
+            throw new RuntimeException("Enable to identify floor");
+        }
 
         selectedFloor.occupySpot(spot, vehicle);
 
-
         ParkingTicket ticket = entryGate.generateTicket(vehicle, selectedFloor, spot);
 
-        activeTickets.put(ticket.getTicketNumber(),ticket);
+        activeTickets.put(ticket.getTicketNumber(), ticket);
 
         vehicleTicketMap.put(vehicle.getVehicleNumber(), ticket);
 
         return ticket;
     }
-    
 
-    public void removeVehicle(
+    public double removeVehicle(
             int ticketNumber,
             ExitGate exitGate,
-            PaymentStrategy paymentStrategy) 
-            {
+            PaymentStrategy paymentStrategy) {
 
-                ParkingTicket ticket = activeTickets.get(ticketNumber);
+        ParkingTicket ticket = activeTickets.get(ticketNumber);
 
         if (ticket == null) {
             throw new RuntimeException("There is no such ticket");
         }
 
-        exitGate.processExit(ticket, pricingStrategy, paymentStrategy);
+        double amount = exitGate.processExit(ticket, pricingStrategy, paymentStrategy);
 
         ticket.getFloor().releaseSpot(ticket.getSpot());
 
@@ -773,6 +714,8 @@ class ParkingLot {
         vehicleTicketMap.remove(ticket.getVehicle().getVehicleNumber());
 
         System.out.println("Vehicle removed successfully");
+
+        return amount;
     }
 
     // search the specified method
@@ -794,7 +737,6 @@ class ParkingLot {
         }
     }
 }// end of parking lot class
-
 
 class ParkingLotGUI extends JFrame implements ParkingObserver {
 
@@ -909,7 +851,7 @@ class ParkingLotGUI extends JFrame implements ParkingObserver {
         exitPanel.add(txtExitTicketNum);
 
         exitPanel.add(new JLabel("Payment Method:"));
-        comboPaymentType = new JComboBox<>(new String[]{"Cash", "UPI", "Card"});
+        comboPaymentType = new JComboBox<>(new String[] { "Cash", "UPI", "Card" });
         exitPanel.add(comboPaymentType);
 
         JButton btnExit = new JButton("Process Exit");
@@ -976,7 +918,8 @@ class ParkingLotGUI extends JFrame implements ParkingObserver {
     private void handleParkVehicle(ActionEvent e) {
         String number = txtParkVehicleNum.getText().trim();
         if (number.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a vehicle number.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter a vehicle number.", "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -999,48 +942,57 @@ class ParkingLotGUI extends JFrame implements ParkingObserver {
         }
     }
 
-    private void handleExitVehicle(ActionEvent e) {
-        String ticketStr = txtExitTicketNum.getText().trim();
-        if (ticketStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a ticket number.", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try {
-            int ticketNumber = Integer.parseInt(ticketStr);
-            String payOption = (String) comboPaymentType.getSelectedItem();
-
-            PaymentStrategy strategy;
-            if ("UPI".equalsIgnoreCase(payOption)) {
-                strategy = new UPIPayment();
-            } else if ("Card".equalsIgnoreCase(payOption)) {
-                strategy = new CardPayment();
-            } else {
-                strategy = new CashPayment();
-            }
-
-            parkingLot.removeVehicle(ticketNumber, exitGate, strategy);
-
-            JOptionPane.showMessageDialog(this, "Vehicle removed successfully. Payment processed.", "Exit Success", JOptionPane.INFORMATION_MESSAGE);
-            txtExitTicketNum.setText("");
-
-        } catch (NumberFormatException nfe) {
-            JOptionPane.showMessageDialog(this, "Ticket number must be integer.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Exit Failed", JOptionPane.ERROR_MESSAGE);
-        }
+   private void handleExitVehicle(ActionEvent e) {
+    String ticketStr = txtExitTicketNum.getText().trim();
+    if (ticketStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter a ticket number.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
+
+    try {
+        int ticketNumber = Integer.parseInt(ticketStr);
+        String payOption = (String) comboPaymentType.getSelectedItem();
+
+        PaymentStrategy strategy;
+        if ("UPI".equalsIgnoreCase(payOption)) {
+            strategy = new UPIPayment();
+        } else if ("Card".equalsIgnoreCase(payOption)) {
+            strategy = new CardPayment();
+        } else {
+            strategy = new CashPayment();
+        }
+
+        // 1. Capture returned amount
+        double amount = parkingLot.removeVehicle(ticketNumber, exitGate, strategy);
+
+        // 2. Display amount in GUI popup
+        JOptionPane.showMessageDialog(this,
+                "Vehicle removed successfully!\n" +
+                "Total Amount Charged: ₹" + amount + "\n" +
+                "Payment Method: " + payOption,
+                "Exit Success", JOptionPane.INFORMATION_MESSAGE);
+
+        txtExitTicketNum.setText("");
+
+    } catch (NumberFormatException nfe) {
+        JOptionPane.showMessageDialog(this, "Ticket number must be integer.", "Input Error", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Exit Failed", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
     private void handleSearchVehicle(ActionEvent e) {
         String number = txtSearchVehicleNum.getText().trim();
         if (number.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a vehicle number.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter a vehicle number.", "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         ParkingTicket ticket = parkingLot.searchVehicle(number);
         if (ticket == null) {
-            JOptionPane.showMessageDialog(this, "Vehicle not found in active parking lot records.", "Search Result", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vehicle not found in active parking lot records.", "Search Result",
+                    JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this,
                     "Vehicle Details:\n" +
@@ -1056,16 +1008,14 @@ class ParkingLotGUI extends JFrame implements ParkingObserver {
 }
 
 //////////////////////////////////////////////////////////////////////////
-// 
+//
 // Controller of the project
 //
 ///////////////////////////////////////////////////////////////////////////
 
-
 public class ParkEngineApplication {
-    public static void main(String[] A)  
-    {
-       try {
+    public static void main(String[] A) {
+        try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {
             // Fallback to default Swing L&F if system L&F fails
@@ -1077,4 +1027,3 @@ public class ParkEngineApplication {
         });
     }
 }
-     
