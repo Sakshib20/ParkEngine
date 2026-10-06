@@ -82,6 +82,6 @@ ParkEngine separates presentation, domain models, and core business logic using 
    ```bash
    javac ParkEngineApplication.java
    
-3.Run the application:
+3.**Run the application**:
    ```bash
    java ParkEngineApplication
