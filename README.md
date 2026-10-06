@@ -1,113 +1,40 @@
-Automated Parking Management System (ParkEngine)
-A Low-Level Design (LLD) and Java Swing desktop application implementing an automated multi-floor parking lot system. Built around core Object-Oriented Design (OOD) principles, this project demonstrates clean component decoupling and software design patterns.   
-TXT
-+ 1
+# 🚗 ParkEngine — Automated Parking Management System
 
-🏛️ System Architecture & Design Patterns
-The backend separates domain entities, strategy algorithms, and presentation logic through classic software design patterns:   
-TXT
+![Java Version](https://img.shields.io/badge/Java-8%2B-orange.svg)
+![Architecture](https://img.shields.io/badge/Architecture-LLD%20%26%20Design%20Patterns-blue.svg)
+![GUI](https://img.shields.io/badge/UI-Java%20Swing-green.svg)
 
-Singleton Pattern: ParkingLot serves as the centralized, thread-safe system controller managing active state across all floors.   
-TXT
+> An automated multi-floor parking lot management system built in Java. Implements Low-Level Design (LLD) principles, Gang of Four (GoF) design patterns, and an event-driven Swing Graphical User Interface.
 
-Factory Pattern: VehicleFactory encapsulates the instantiation logic for various vehicle types (Bike, Car, Truck).   
-TXT
+---
 
-Observer Pattern: ParkingObserver provides reactive updates. ParkingLotGUI subscribes to ParkingFloor state changes to update the live display board automatically when vehicles enter or exit.   
-TXT
-+ 1
+## 🏛️ System Architecture & Design Patterns
 
-Strategy Pattern: Decouples business logic across three configurable modules:
+ParkEngine separates presentation, domain models, and core business logic using object-oriented design patterns:
 
-Parking Strategy: FirstAvailableStrategy identifies available spots matching vehicle criteria across floors.   
-TXT
+* **Singleton Pattern (`ParkingLot`)**: Guarantees a single centralized controller managing active ticket registries, floor capacity, and vehicle lookup tables across the application runtime.
+* **Factory Pattern (`VehicleFactory`)**: Centralizes object creation for `Bike`, `Car`, and `Truck` instances, encapsulating subclass instantiation logic.
+* **Observer Pattern (`ParkingObserver`)**: Establishes reactive synchronization between `ParkingFloor` (Subject) and display boards (`ParkingLotGUI`, `ParkingDisplayBoard`). Automatically recalculates and broadcasts available spots when vehicles enter or exit.
+* **Strategy Pattern**:
+  * **`ParkingStrategy`**: Pluggable spot allocation algorithm (`FirstAvailableStrategy`).
+  * **`PricingStrategy`**: Dynamic pricing calculations (`NormalPricingStrategy`, `WeekendPricingStrategy`).
+  * **`PaymentStrategy`**: Decoupled transaction handling (`CashPayment`, `UPIPayment`, `CardPayment`).
 
-Pricing Strategy: NormalPricingStrategy and WeekendPricingStrategy dynamically compute parking fees.   
-TXT
+---
 
-Payment Strategy: UPIPayment, CardPayment, and CashPayment isolate transaction handling.   
-TXT
+## ✨ Features
 
-✨ Features
-Multi-Floor & Spot Type Compatibility: Categorizes parking capacity (BIKE, CAR, TRUCK) and enforces strict spot-fitting logic per vehicle type.   
-TXT
+* **Multi-Floor Capacity Engine**: Dedicated spot classification (`BIKE`, `CAR`, `TRUCK`) enforcing strict spot-fitting constraints per vehicle type.
+* **Real-Time UI Dashboard**: Event-driven Swing interface providing real-time spot availability updates per floor.
+* **Automated Gate Operations**: Integrated check-in at `EntryGate` (ticket generation) and check-out at `ExitGate` (fee calculation and spot release).
+* **Dynamic Billing Engine**: Hourly duration calculation based on arrival and departure timestamps.
+* **Vehicle Search**: Direct lookups for active tickets using vehicle registration numbers.
 
-Real-time Live Display Board: Event-driven Swing UI updates available spot counts in real time per floor.   
-TXT
+---
 
-Automated Gate Operations: Integrated EntryGate for ticket generation and ExitGate for billing and spot release.   
-TXT
+## 📂 Project Structure
 
-Dynamic Fee Calculation: Calculates duration in hours from arrival to exit and applies the configured pricing strategy.   
-TXT
-
-Vehicle Lookup & Active Records: Indexing by ticket number and vehicle registration number for search operations and duplicate entry prevention.   
-TXT
-
-📂 File & Repository Structure
-Plaintext
+```text
 .
-├── ParkEngineApplication.java   # Core system implementation (Domain Models, Strategies, GUI & Launcher)
-└── README.md                    # System documentation
-Key Class Breakdown
-Component	Class / Interface	Description
-Launcher	ParkEngineApplication	
-Application entry point configuring System Look & Feel and Swing EDT. 
-TXT
-
-GUI View	ParkingLotGUI	
-Swing dashboard implementing ParkingObserver for reactive UI updates. 
-TXT
-
-System Core	ParkingLot	
-Thread-safe Singleton managing active tickets, floor registries, and operations. 
-TXT
-
-Domain Models	Vehicle, ParkingSpot, ParkingFloor, ParkingTicket	
-Core domain entities handling state, capacity, and timestamps. 
-TXT
-
-Gates	EntryGate, ExitGate	
-Controllers for check-in ticket issuing and check-out payment processing. 
-TXT
-
-💳 Pricing Strategy Matrix
-Vehicle Type	Normal Rate (NormalPricingStrategy)	Weekend Rate (WeekendPricingStrategy)
-Bike	
-₹20 / hour 
-TXT
-
-₹40 / hour 
-TXT
-
-Car	
-₹50 / hour 
-TXT
-
-₹100 / hour 
-TXT
-
-Truck	
-₹100 / hour 
-TXT
-
-₹200 / hour[cite: 3]
-
-🚀 Getting Started
-Prerequisites
-Java Development Kit (JDK): Version 8 or higher.
-
-Compilation and Execution
-Clone the repository:
-
-Bash
-git clone https://github.com/YOUR_USERNAME/parking-management-system.git
-cd parking-management-system
-Compile the source file:
-
-Bash
-javac ParkEngineApplication.java
-Run the application:
-
-Bash
-java ParkEngineApplication
+├── ParkEngineApplication.java   # Complete application driver (Domain Models, Strategies, GUI & Launcher)
+└── README.md                    # Project documentation
