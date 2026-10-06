@@ -38,3 +38,50 @@ ParkEngine separates presentation, domain models, and core business logic using 
 .
 ├── ParkEngineApplication.java   # Complete application driver (Domain Models, Strategies, GUI & Launcher)
 └── README.md                    # Project documentation
+```
+---
+
+## 🧩 Core Component Reference
+
+- **Launcher** (`ParkEngineApplication`): Application entry point configuring System Look & Feel and launching the Swing Event Dispatch Thread (EDT).
+
+- **GUI View** (`ParkingLotGUI`): Reactive Swing dashboard implementing `ParkingObserver` to render live parking capacity.
+
+- **Core Manager** (`ParkingLot`): Thread-safe Singleton managing active tickets, floor registries, and parking/exit workflows.
+
+- **Domain Models** (`Vehicle`, `ParkingSpot`, `ParkingFloor`, `ParkingTicket`): Core domain entities holding vehicle details, spot allocations, and timestamps.
+
+- **Gates** (`EntryGate`, `ExitGate`): Controllers handling ticket issuance, duration calculation, and payment execution.
+
+---
+
+## 💳 Pricing Structure
+
+- **Bike**: ₹20 / hour (`NormalPricingStrategy`) | ₹40 / hour (`WeekendPricingStrategy`)
+
+- **Car**: ₹50 / hour (`NormalPricingStrategy`) | ₹100 / hour (`WeekendPricingStrategy`)
+
+- **Truck**: ₹100 / hour (`NormalPricingStrategy`) | ₹200 / hour (`WeekendPricingStrategy`)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Java Development Kit (JDK)**: Version 8 or higher.
+
+### Compilation & Execution
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Sakshib20/ParkEngine.git
+   cd ParkEngine
+
+2. **Compile the source file**:
+   ```bash
+   javac ParkEngineApplication.java
+   
+3.Run the application:
+   ```bash
+   java ParkEngineApplication
